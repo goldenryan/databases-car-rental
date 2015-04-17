@@ -25,7 +25,7 @@ if (isset($_POST['submit'])) {
 
 $sql = "SELECT * FROM cars;";
 $result = dbquery($sql);
-echo $result->num_rows;
+print_r($result->fetch_assoc());
 
 closeconnection();
 
