@@ -1,11 +1,28 @@
  <?php
+
+ 
 $servername = "localhost";
 $username = "root";
 $password = "";
 $db = "rectum";
-
-// Create connection
 $conn = new mysqli($servername, $username, $password);
+
+ function openconnection(){
+	global $servername, $username, $password, $conn;
+	 // Create connection
+	$conn = new mysqli($servername, $username, $password);
+	$conn->query("use rectum;");
+ }
+ function dbquery($querystring){
+	 global $conn;
+	 return $conn->query($querystring);
+ }
+ function closeconnection(){
+	global $servername, $username, $password, $conn;
+	mysqli_close($conn); 
+ }
+
+openconnection();
 
 // Check connection
 if ($conn->connect_error) {
@@ -49,5 +66,41 @@ if ($conn->query("create table if not exists is_at (vin varchar(50),location_id 
 }
 
 
-mysqli_close($conn); 
+closeconnection();
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+  <title>My first styled page</title>
+</head>
+<style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+a {
+    display: block;
+    width: 80px;
+    background-color: #dddddd;
+}
+</style>
+
+<body>
+<!-- Site navigation menu -->
+<ul class="navbar">
+  <li><a href="register.html">Register</a>
+  <li><a href="cars.html">Cars</a>
+  <li><a href="admin.html">Admin</a>
+  <!--<li><a href="links.html">Links</a>-->
+</ul>
+
+
+</body>
+</html>
