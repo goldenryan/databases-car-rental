@@ -48,7 +48,7 @@ if ($conn->query("create table if not exists renter (renter_id int, name varchar
 if ($conn->query("create table if not exists cars(vin varchar(50), make varchar(20), model varchar(20), year int, capacity int, mpg int, miles int, reserved bool);") === FALSE) {
 	printf("Failed to create table cars");
 }
-if ($conn->query("create table if not exists location (location_id int, city varchar(30), state varchar(0));") === FALSE) {
+if ($conn->query("create table if not exists location (location_id int, city varchar(30), state varchar(30));") === FALSE) {
 	printf("Failed to create table location");
 }
 if ($conn->query("create table if not exists takes(renter_id int, trip_id int);") === FALSE) {
@@ -95,9 +95,10 @@ a {
 <body>
 <!-- Site navigation menu -->
 <ul class="navbar">
-  <li><a href="register.html">Register</a>
-  <li><a href="cars.html">Cars</a>
-  <li><a href="admin.html">Admin</a>
+  <li><a href="register.php">Register</a>
+  <li><a href="cars.php">Cars</a>
+  <li><a href="locations.php">Locations</a>
+  <li><a href="admin.php">Admin</a>
   <!--<li><a href="links.html">Links</a>-->
 </ul>
 
