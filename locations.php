@@ -15,6 +15,7 @@ if (isset($_POST['submit'])) {
 	VALUES ('".$_POST['id']."', '".$_POST['city']."', '".$_POST['state']."');";
 	//We don't really need to store the result for inserts/deletes, but it helps with debugging
 	$result = dbquery($querystring);
+	
 	closeconnection();
 	//echo $querystring."\n";
 }
@@ -24,13 +25,18 @@ if(isset($_POST['remove'])) {
 	$querystring = "DELETE FROM location WHERE location_id='".$_POST['remove_id']."';";
 	//We don't really need to store the result for inserts/deletes, but it helps with debugging
 	$result = dbquery($querystring);
+	
+	//Update our relation table
+	$querystring = "DELETE FROM is_at WHERE location_id='".$_POST['remove_id']."';";
+	$result = dbquery($querystring);
+	
 	closeconnection();
 }
 
 
 ?>
 
- <table style="width:50%">
+ <table style="width:75%">
   <tr>
     <td>
 	<form action="" method="post">

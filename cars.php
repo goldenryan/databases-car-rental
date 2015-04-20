@@ -16,6 +16,11 @@ if (isset($_POST['submit'])) {
 	.$_POST['capacity']."', '".$_POST['mpg']."', '".$_POST['miles']."', '".$_POST['reserved']."');";
 	//We don't really need to store the result for inserts/deletes, but it helps with debugging
 	$result = dbquery($querystring);
+	
+	//Update our relation table
+	$querystring="INSERT INTO is_at VALUES ('".$_POST['vin']."','".$_POST['location']."');";
+	$result = dbquery($querystring);
+	
 	closeconnection();
     /*$example = $_POST['vin'];
     $example2 = $_POST['make'];
@@ -30,13 +35,18 @@ if(isset($_POST['remove'])) {
 	$querystring = "DELETE FROM cars WHERE vin='".$_POST['remove_vin']."';";
 	//We don't really need to store the result for inserts/deletes, but it helps with debugging
 	$result = dbquery($querystring);
+	
+	//Update our relation table
+	$querystring = "DELETE FROM is_at WHERE vin='".$_POST['remove_vin']."';";
+	$result = dbquery($querystring);
+	
 	closeconnection();
 }
 
 
 ?>
 
- <table style="width:50%">
+ <table style="width:75%">
   <tr>
     <td>
 	<form action="" method="post">
@@ -64,11 +74,25 @@ if(isset($_POST['remove'])) {
 		Reserved:<br>
 		<input type="text" name="reserved">
 		<br>
+		Location:<br>
+		<select name="location">
+			<?php
+				openconnection();
+				$sql = "SELECT * FROM location;";
+				$result = dbquery($sql);
+				closeconnection();
+				//This little tidbit right here will loop through the query and print a new row in the table with it's info.
+				while($resultarray = mysqli_fetch_array($result)){
+					echo '<option value="'.$resultarray['location_id'].'">'.$resultarray['city'].'</option>';
+				}
+				?>
+		</select>
+		<br><br>
 		<input type="submit" value="Add Car" name="submit">
 		</form> 
 	</td>
 	<td>
-	<table  border=1>
+	<table border=1>
 		<tr>
 			<th>VIN</th>
 			<th>Make</th>
@@ -78,13 +102,14 @@ if(isset($_POST['remove'])) {
 			<th>MPG</th> 
 			<th>Miles</th>
 			<th>Reserved</th>
+			<th>Location</th>
 		</tr>
 		
 			<?php
 			openconnection();
 			$sql = "SELECT * FROM cars;";
 			$result = dbquery($sql);
-			closeconnection();
+
 			//This little tidbit right here will loop through the query and print a new row in the table with it's info.
 			while($resultarray = mysqli_fetch_array($result)){
 				echo "<tr>";
@@ -96,8 +121,12 @@ if(isset($_POST['remove'])) {
 					echo "<td>"; print($resultarray['mpg']); echo "</td>";
 					echo "<td>"; print($resultarray['miles']); echo "</td>";
 					echo "<td>"; print($resultarray['reserved']); echo "</td>";
+					$locationresult = dbquery("SELECT location.city FROM location WHERE location.location_id = '".$resultarray['vin']."';");
+					$locarray = mysqli_fetch_array($locationresult);
+					echo "<td>"; print($locarray['city']); echo "</td>";
 				echo "</tr>";
 			}
+			closeconnection();
 			?>
 		</tr>
 	</table>

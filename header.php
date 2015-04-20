@@ -64,6 +64,8 @@ if ($conn->query("create table if not exists with_car (vin varchar(50),trip_id i
 if ($conn->query("create table if not exists is_at (vin varchar(50),location_id int);") === FALSE)  {
 	printf("Failed to create table is_at");
 }
+//This makes it so the is_at table cannot hold duplicate entries of vin. Saying a car is a a location multiple times is a waste.
+$conn->query("ALTER TABLE is_at ADD UNIQUE (vin);");
 
 
 closeconnection();
