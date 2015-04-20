@@ -121,7 +121,11 @@ if(isset($_POST['remove'])) {
 					echo "<td>"; print($resultarray['mpg']); echo "</td>";
 					echo "<td>"; print($resultarray['miles']); echo "</td>";
 					echo "<td>"; print($resultarray['reserved']); echo "</td>";
-					$locationresult = dbquery("SELECT location.city FROM location WHERE location.location_id = '".$resultarray['vin']."';");
+					$query = "select butts.city from 
+									(select is_at.vin, location.location_id, location.city, location.state from is_at inner join location on is_at.location_id = location.location_id) butts 
+									where butts.vin ='".$resultarray['vin']."';";
+					$locationresult = dbquery($query);
+					//echo $query;
 					$locarray = mysqli_fetch_array($locationresult);
 					echo "<td>"; print($locarray['city']); echo "</td>";
 				echo "</tr>";
