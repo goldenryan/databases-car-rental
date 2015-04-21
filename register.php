@@ -10,6 +10,7 @@ include 'header.php';
 
 
 if (isset($_POST['submit'])) {
+	$user = "pooter";
 	openconnection();
 	$querystring="INSERT INTO renter
 	VALUES ('".$_POST['id']."', '".$_POST['name']."', '".$_POST['age']."');";
@@ -32,7 +33,7 @@ if(isset($_POST['remove'])) {
 
 ?>
 
- <table style="width:75%">
+ <table style="width:100%">
   <tr>
     <td>
 	<form action="" method="post">

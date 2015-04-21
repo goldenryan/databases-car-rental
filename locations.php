@@ -36,7 +36,7 @@ if(isset($_POST['remove'])) {
 
 ?>
 
- <table style="width:75%">
+ <table style="width:100%">
   <tr>
     <td>
 	<form action="" method="post">

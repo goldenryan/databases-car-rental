@@ -19,6 +19,7 @@ if (isset($_POST['submit'])) {
 	
 	//Update our relation table
 	$querystring="INSERT INTO is_at VALUES ('".$_POST['vin']."','".$_POST['location']."');";
+	//echo $querystring;
 	$result = dbquery($querystring);
 	
 	closeconnection();
@@ -46,7 +47,7 @@ if(isset($_POST['remove'])) {
 
 ?>
 
- <table style="width:75%">
+ <table style="width:100%">
   <tr>
     <td>
 	<form action="" method="post">

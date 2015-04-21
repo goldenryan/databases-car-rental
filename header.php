@@ -39,7 +39,7 @@ if ($conn->query("USE $db") === FALSE) {
 		printf("Database creation failed.\n");
 	}
 }
-if ($conn->query("create table if not exists trip (trip_id int, date datetime, departure_time time);") === FALSE) {
+if ($conn->query("create table if not exists trip (trip_id int, date varchar(30), departure_time varchar(30));") === FALSE) {
 	printf("Failed to create table trip.");
 }
 if ($conn->query("create table if not exists renter (renter_id int, name varchar(50), age int);") === FALSE) {
@@ -54,18 +54,19 @@ if ($conn->query("create table if not exists location (location_id int, city var
 if ($conn->query("create table if not exists takes(renter_id int, trip_id int);") === FALSE) {
 	printf("Failed to create table takes");
 }
-
 if ($conn->query("create table if not exists to_loc (location_id int, trip_id int);") === FALSE)  {
 	printf("Failed to create table to_loc");
 }
+//$conn->query("ALTER TABLE to_loc ADD UNIQUE (trip_id);");
 if ($conn->query("create table if not exists with_car (vin varchar(50),trip_id int);") === FALSE)  {
 	printf("Failed to create table with_car");
 }
+//$conn->query("ALTER TABLE to_loc ADD UNIQUE (trip_id);");
 if ($conn->query("create table if not exists is_at (vin varchar(50),location_id int);") === FALSE)  {
 	printf("Failed to create table is_at");
 }
 //This makes it so the is_at table cannot hold duplicate entries of vin. Saying a car is a a location multiple times is a waste.
-$conn->query("ALTER TABLE is_at ADD UNIQUE (vin);");
+//$conn->query("ALTER TABLE is_at ADD UNIQUE (vin);");
 
 
 closeconnection();
@@ -100,6 +101,7 @@ a {
   <li><a href="register.php">Register</a>
   <li><a href="cars.php">Cars</a>
   <li><a href="locations.php">Locations</a>
+  <li><a href="trips.php">Trips</a>
   <li><a href="admin.php">Admin</a>
   <!--<li><a href="links.html">Links</a>-->
 </ul>
