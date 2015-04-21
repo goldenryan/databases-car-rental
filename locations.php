@@ -11,8 +11,8 @@ include 'header.php';
 
 if (isset($_POST['submit'])) {
 	openconnection();
-	$querystring="INSERT INTO location
-	VALUES ('".$_POST['id']."', '".$_POST['city']."', '".$_POST['state']."');";
+	$querystring="INSERT INTO location (city,state)
+	VALUES ('".$_POST['city']."', '".$_POST['state']."');";
 	//We don't really need to store the result for inserts/deletes, but it helps with debugging
 	$result = dbquery($querystring);
 	
@@ -21,16 +21,19 @@ if (isset($_POST['submit'])) {
 }
 
 if(isset($_POST['remove'])) {
-	openconnection();
-	$querystring = "DELETE FROM location WHERE location_id='".$_POST['remove_id']."';";
-	//We don't really need to store the result for inserts/deletes, but it helps with debugging
-	$result = dbquery($querystring);
-	
-	//Update our relation table
-	$querystring = "DELETE FROM is_at WHERE location_id='".$_POST['remove_id']."';";
-	$result = dbquery($querystring);
-	
-	closeconnection();
+	if(is_numeric($_POST['remove_id'])){
+		openconnection();
+		$querystring = "DELETE FROM location WHERE location_id='".$_POST['remove_id']."';";
+		//We don't really need to store the result for inserts/deletes, but it helps with debugging
+		$result = dbquery($querystring);
+		
+		//Update our relation table
+		$querystring = "DELETE FROM is_at WHERE location_id='".$_POST['remove_id']."';";
+		$result = dbquery($querystring);
+		
+		closeconnection();	
+	}else
+		echo "<p style='color:red'>Remove ID has to be an integer</p>";
 }
 
 
@@ -40,9 +43,6 @@ if(isset($_POST['remove'])) {
   <tr>
     <td>
 	<form action="" method="post">
-		ID:<br>
-		<input type="text" name="id">
-		<br>
 		City:<br>
 		<input type="text" name="city">
 		<br>

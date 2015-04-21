@@ -10,24 +10,30 @@ include 'header.php';
 
 
 if (isset($_POST['submit'])) {
-	$user = "pooter";
-	openconnection();
-	$querystring="INSERT INTO renter
-	VALUES ('".$_POST['id']."', '".$_POST['name']."', '".$_POST['age']."');";
-	//We don't really need to store the result for inserts/deletes, but it helps with debugging
-	$result = dbquery($querystring);
-	
-	closeconnection();
-	//echo $querystring."\n";
+	if(is_numeric($_POST['age'])){
+		$user = "pooter";
+		openconnection();
+		$querystring="INSERT INTO renter (name,age)
+		VALUES ('".$_POST['name']."', '".$_POST['age']."');";
+		//We don't really need to store the result for inserts/deletes, but it helps with debugging
+		$result = dbquery($querystring);
+		
+		closeconnection();
+		//echo $querystring."\n";
+	}else
+		echo "<p style='color:red'>Age has to be an integer</p>";
 }
 
 if(isset($_POST['remove'])) {
-	openconnection();
-	$querystring = "DELETE FROM renter WHERE renter_id='".$_POST['remove_id']."';";
-	//We don't really need to store the result for inserts/deletes, but it helps with debugging
-	$result = dbquery($querystring);
-	
-	closeconnection();
+	if(is_numeric($_POST['remove_id'])){
+		openconnection();
+		$querystring = "DELETE FROM renter WHERE renter_id='".$_POST['remove_id']."';";
+		//We don't really need to store the result for inserts/deletes, but it helps with debugging
+		$result = dbquery($querystring);
+		
+		closeconnection();
+	}else
+		echo "<p style='color:red'>Remove ID has to be an integer</p>";
 }
 
 
@@ -37,9 +43,6 @@ if(isset($_POST['remove'])) {
   <tr>
     <td>
 	<form action="" method="post">
-		ID:<br>
-		<input type="text" name="id">
-		<br>
 		Name:<br>
 		<input type="text" name="name">
 		<br>

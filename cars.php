@@ -10,25 +10,29 @@ include 'header.php';
 
 
 if (isset($_POST['submit'])) {
-	openconnection();
-	$querystring="INSERT INTO cars
-	VALUES ('".$_POST['vin']."', '".$_POST['make']."', '".$_POST['model']."', '".$_POST['year']."', '"
-	.$_POST['capacity']."', '".$_POST['mpg']."', '".$_POST['miles']."', '".$_POST['reserved']."');";
-	//We don't really need to store the result for inserts/deletes, but it helps with debugging
-	$result = dbquery($querystring);
-	
-	//Update our relation table
-	$querystring="INSERT INTO is_at VALUES ('".$_POST['vin']."','".$_POST['location']."');";
-	//echo $querystring;
-	$result = dbquery($querystring);
-	
-	closeconnection();
-    /*$example = $_POST['vin'];
-    $example2 = $_POST['make'];
-    echo $example . " " . $example2;
-	echo "Entry Added.\n";
-	echo $querystring."\n";
-	echo $result;*/
+	if(is_numeric($_POST['year']) && is_numeric($_POST['capacity']) && is_numeric($_POST['mpg']) && is_numeric($_POST['miles']) && is_numeric($_POST['reserved'])){
+		openconnection();
+		$querystring="INSERT INTO cars
+		VALUES ('".$_POST['vin']."', '".$_POST['make']."', '".$_POST['model']."', '".$_POST['year']."', '"
+		.$_POST['capacity']."', '".$_POST['mpg']."', '".$_POST['miles']."', '".$_POST['reserved']."');";
+		//We don't really need to store the result for inserts/deletes, but it helps with debugging
+		$result = dbquery($querystring);
+		
+		//Update our relation table
+		$querystring="INSERT INTO is_at VALUES ('".$_POST['vin']."','".$_POST['location']."');";
+		//echo $querystring;
+		$result = dbquery($querystring);
+		
+		closeconnection();
+	    /*$example = $_POST['vin'];
+	    $example2 = $_POST['make'];
+	    echo $example . " " . $example2;
+		echo "Entry Added.\n";
+		echo $querystring."\n";
+		echo $result;*/
+	} else
+		echo "<p style='color:red'>Year, Capacity, MPG, miles, and reserved have to be integers</p>";
+
 }
 
 if(isset($_POST['remove'])) {
@@ -60,7 +64,7 @@ if(isset($_POST['remove'])) {
 		Model:<br>
 		<input type="text" name="model">
 		<br>
-		Year:<br>
+		Year (yyyy):<br>
 		<input type="text" name="year">
 		<br>
 		Capacity (persons):<br>
@@ -73,7 +77,7 @@ if(isset($_POST['remove'])) {
 		<input type="text" name="miles">
 		<br>
 		Reserved:<br>
-		<input type="text" name="reserved">
+		<input type="text" value="0" name="reserved">
 		<br>
 		Location:<br>
 		<select name="location">

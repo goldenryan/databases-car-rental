@@ -12,22 +12,25 @@ include 'header.php';
 
 if (isset($_POST['submit'])) {
 	openconnection();
-	$querystring="INSERT INTO trip
-	VALUES ('".$_POST['id']."', '".$_POST['date']."', '".$_POST['deptime']."');";
+	$querystring="INSERT INTO trip (date,departure_time)
+	VALUES ('".$_POST['date']."', '".$_POST['deptime']."');";
 	//We don't really need to store the result for inserts/deletes, but it helps with debugging
-	$result = dbquery($querystring);
-	
+	$result=dbquery($querystring);
+	$id = $conn->insert_id;
 	
 	//Update our relation tables
-	$querystring="INSERT INTO with_car VALUES ('".$_POST['car']."','".$_POST['id']."');";
+	$querystring="INSERT INTO with_car VALUES ('".$_POST['car']."','".$id."');";
 	$result = dbquery($querystring);
 	
-	$querystring="INSERT INTO to_loc VALUES ('".$_POST['destination']."','".$_POST['id']."');";
+	$querystring="INSERT INTO to_loc VALUES ('".$_POST['destination']."','".$id."');";
 	$result = dbquery($querystring);
 	
-	$querystring="INSERT INTO takes VALUES ('".$_POST['renter']."','".$_POST['id']."');";
+	$querystring="INSERT INTO takes VALUES ('".$_POST['renter']."','".$id."');";
 	$result = dbquery($querystring);
-	
+
+	//set the car to reserved while on trip
+	$querystring="UPDATE cars SET reserved = 1 WHERE cars.vin = ".$_POST['car'].";";
+	$result = dbquery($querystring);
 	
 	closeconnection();
     /*$example = $_POST['vin'];
@@ -39,23 +42,31 @@ if (isset($_POST['submit'])) {
 }
 
 if(isset($_POST['remove'])) {
-	openconnection();
-	$querystring = "DELETE FROM trip WHERE trip_id='".$_POST['remove_id']."';";
-	//We don't really need to store the result for inserts/deletes, but it helps with debugging
-	$result = dbquery($querystring);
-	
-	
-	//Update our relation tables
-	$querystring = "DELETE FROM with_car WHERE trip_id='".$_POST['remove_id']."';";
-	$result = dbquery($querystring);
-	
-	$querystring = "DELETE FROM to_loc WHERE trip_id='".$_POST['remove_id']."';";
-	$result = dbquery($querystring);
-	
-	$querystring = "DELETE FROM takes WHERE trip_id='".$_POST['remove_id']."';";
-	$result = dbquery($querystring);
-	
-	closeconnection();
+
+	if(is_numeric($_POST['remove_id'])){
+		openconnection();
+		$querystring = "DELETE FROM trip WHERE trip_id='".$_POST['remove_id']."';";
+		//We don't really need to store the result for inserts/deletes, but it helps with debugging
+		$result = dbquery($querystring);
+		
+		//set the car to not reserved because trip was deleted
+		$querystring="UPDATE cars SET reserved = 0 WHERE cars.vin = (SELECT vin FROM with_car WHERE trip_id='".$_POST['remove_id']."');";
+		$result = dbquery($querystring);
+
+		//Update our relation tables
+		$querystring = "DELETE FROM with_car WHERE trip_id='".$_POST['remove_id']."';";
+		$result = dbquery($querystring);
+		
+		$querystring = "DELETE FROM to_loc WHERE trip_id='".$_POST['remove_id']."';";
+		$result = dbquery($querystring);
+		
+		$querystring = "DELETE FROM takes WHERE trip_id='".$_POST['remove_id']."';";
+		$result = dbquery($querystring);
+
+		
+		closeconnection();
+	}else
+		echo "<p style='color:red'>Remove ID has to be an integer</p>";
 }
 
 
@@ -83,18 +94,14 @@ if(isset($_POST['remove'])) {
 					}
 					?>
 			</select>
-			<input type="submit" value="Ok" name="locationset">
+			<input type="submit" value="Load cars at location" name="locationset">
 		</form>
 	<form action="" method="post">
 		
-	
-		ID:<br>
-		<input type="text" name="id" >
-		<br>
-		Date:<br>
+		Date (yyyy-mm-dd):<br>
 		<input type="text" name="date">
 		<br>
-		Departure Time:<br>
+		Departure Time (hh:mm:ss):<br>
 		<input type="text" name="deptime">
 		<br>
 		Car(VIN, Model):<br>
