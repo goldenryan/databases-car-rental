@@ -64,22 +64,22 @@ if ($conn->query("create table if not exists is_at (vin varchar(50),location_id 
 	printf("Failed to create table is_at");
 }
 //alters after here
-if ($conn->query("ALTER TABLE location ADD PRIMARY KEY (location_id);") === FALSE)  {
+if ($conn->query("ALTER TABLE location ADD PRIMARY KEY (location_id);") === FALSE && $conn->query("USE $db") === FALSE)  {
 	printf("Failed to create primary key in location");
 }
 if ($conn->query("ALTER TABLE location MODIFY COLUMN location_id INT NOT NULL AUTO_INCREMENT;") === FALSE)  {
 	printf("Failed to auto increment primary key in location");
 }
-if ($conn->query("ALTER TABLE cars ADD PRIMARY KEY (vin);") === FALSE)  {
+if ($conn->query("ALTER TABLE cars ADD PRIMARY KEY (vin);") === FALSE && $conn->query("USE $db") === FALSE)  {
 	printf("Failed to create primary key in cars");
 }
-if ($conn->query("ALTER TABLE renter ADD PRIMARY KEY (renter_id);") === FALSE)  {
+if ($conn->query("ALTER TABLE renter ADD PRIMARY KEY (renter_id);") === FALSE && $conn->query("USE $db") === FALSE)  {
 	printf("Failed to create primary key in renter");
 }
 if ($conn->query("ALTER TABLE renter MODIFY COLUMN renter_id INT NOT NULL AUTO_INCREMENT;") === FALSE)  {
 	printf("Failed to auto increment primary key in renter");
 }
-if ($conn->query("ALTER TABLE trip ADD PRIMARY KEY (trip_id);") === FALSE)  {
+if ($conn->query("ALTER TABLE trip ADD PRIMARY KEY (trip_id);") === FALSE && $conn->query("USE $db") === FALSE)  {
 	printf("Failed to create primary key in trip");
 }
 if ($conn->query("ALTER TABLE trip MODIFY COLUMN trip_id INT NOT NULL AUTO_INCREMENT;") === FALSE)  {
